@@ -24,5 +24,7 @@ namespace livraria_rtc.Model
         public string Complemento { get; set; }
         [Required]
         public string Cep { get; set; }
+
+        public Usuario Usuario { get; set; }
     }
 }

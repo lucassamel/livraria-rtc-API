@@ -17,5 +17,12 @@ namespace livraria_rtc.Model
         [Required]
         public string Email { get; set; }
 
+        public ICollection<Livro> Livros { get; set; }
+        public ICollection<Endereco> Enderecos { get; set; }
+
+        public Livro Livro { get; set; }
+
+        public Endereco Endereco { get; set; }
+
     }
 }

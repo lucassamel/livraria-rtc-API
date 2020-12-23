@@ -46,12 +46,12 @@ namespace livraria_rtc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Usuario")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("EnderecoId");
 
-                    b.HasIndex("Usuario");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Endereco");
                 });
@@ -81,7 +81,12 @@ namespace livraria_rtc.Migrations
                     b.Property<int>("Paginas")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("LivroId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Livros");
                 });
@@ -112,11 +117,25 @@ namespace livraria_rtc.Migrations
 
             modelBuilder.Entity("livraria_rtc.Model.Endereco", b =>
                 {
-                    b.HasOne("livraria_rtc.Model.Usuario", "UsuarioId")
-                        .WithMany()
-                        .HasForeignKey("Usuario");
+                    b.HasOne("livraria_rtc.Model.Usuario", null)
+                        .WithMany("Enderecos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("UsuarioId");
+            modelBuilder.Entity("livraria_rtc.Model.Livro", b =>
+                {
+                    b.HasOne("livraria_rtc.Model.Usuario", null)
+                        .WithMany("Livros")
+                        .HasForeignKey("UsuarioId");
+                });
+
+            modelBuilder.Entity("livraria_rtc.Model.Usuario", b =>
+                {
+                    b.Navigation("Enderecos");
+
+                    b.Navigation("Livros");
                 });
 #pragma warning restore 612, 618
         }

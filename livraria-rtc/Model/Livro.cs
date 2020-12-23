@@ -21,5 +21,7 @@ namespace livraria_rtc.Model
         [Required]
         public string Genero { get; set; }
 
+        public Usuario Usuario { get; set; }
+
     }
 }

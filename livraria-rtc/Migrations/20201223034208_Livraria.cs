@@ -7,23 +7,6 @@ namespace livraria_rtc.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Livros",
-                columns: table => new
-                {
-                    LivroId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ISNB = table.Column<int>(type: "int", nullable: false),
-                    Paginas = table.Column<int>(type: "int", nullable: false),
-                    Genero = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Livros", x => x.LivroId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Usuario",
                 columns: table => new
                 {
@@ -44,7 +27,7 @@ namespace livraria_rtc.Migrations
                 {
                     EnderecoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Usuario = table.Column<int>(type: "int", nullable: true),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
                     Logadouro = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UF = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -55,17 +38,46 @@ namespace livraria_rtc.Migrations
                 {
                     table.PrimaryKey("PK_Endereco", x => x.EnderecoId);
                     table.ForeignKey(
-                        name: "FK_Endereco_Usuario_Usuario",
-                        column: x => x.Usuario,
+                        name: "FK_Endereco_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Livros",
+                columns: table => new
+                {
+                    LivroId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ISNB = table.Column<int>(type: "int", nullable: false),
+                    Paginas = table.Column<int>(type: "int", nullable: false),
+                    Genero = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Livros", x => x.LivroId);
+                    table.ForeignKey(
+                        name: "FK_Livros_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
                         principalTable: "Usuario",
                         principalColumn: "UsuarioId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Endereco_Usuario",
+                name: "IX_Endereco_UsuarioId",
                 table: "Endereco",
-                column: "Usuario");
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Livros_UsuarioId",
+                table: "Livros",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
