@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace livraria_rtc.Model
 {
-    public class Livro
+    public class Usuario
     {
         [Key]
-        public int LivroId { get; set; }
+        public int UsuarioId { get; set; }
         [Required]
         public string Nome { get; set; }
         [Required]
-        public string Autor { get; set; }
+        public string Sobrenome { get; set; }
         [Required]
-        public int ISNB { get; set; }
-        [Required]
-        public int Paginas { get; set; }
-        [Required]
-        public string Genero { get; set; }
+        public string Email { get; set; }
 
     }
 }
