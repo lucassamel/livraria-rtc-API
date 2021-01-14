@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using livraria_rtc.Context;
 using livraria_rtc.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace livraria_rtc.Controllers
 {
@@ -15,10 +17,13 @@ namespace livraria_rtc.Controllers
     public class LivrosController : ControllerBase
     {
         private readonly LivrariaContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LivrosController(LivrariaContext context)
+        public LivrosController(LivrariaContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Livros
@@ -78,8 +83,15 @@ namespace livraria_rtc.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Livro>> PostLivro(Livro livro)
         {
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Usuario
+                .FirstAsync(p => p.Email == account.Email);
+
+            livro.UsuarioId = perfilLogado.UsuarioId;
+
             _context.Livros.Add(livro);
             await _context.SaveChangesAsync();
 

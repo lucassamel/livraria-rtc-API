@@ -31,7 +31,14 @@ namespace livraria_rtc
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
             services.AddControllers();
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
                          .AddEntityFrameworkStores<LivrariaContext>();
         }
 

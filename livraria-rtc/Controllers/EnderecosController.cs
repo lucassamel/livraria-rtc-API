@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using livraria_rtc.Context;
 using livraria_rtc.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace livraria_rtc.Controllers
 {
@@ -15,10 +17,13 @@ namespace livraria_rtc.Controllers
     public class EnderecosController : ControllerBase
     {
         private readonly LivrariaContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EnderecosController(LivrariaContext context)
+        public EnderecosController(LivrariaContext context,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Enderecos
@@ -78,9 +83,17 @@ namespace livraria_rtc.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Endereco>> PostEndereco(Endereco endereco)
         {
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Usuario
+                .FirstAsync(p => p.Email == account.Email);
+
+            endereco.UsuarioId = perfilLogado.UsuarioId;
+
             _context.Endereco.Add(endereco);
+            
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEndereco", new { id = endereco.EnderecoId }, endereco);

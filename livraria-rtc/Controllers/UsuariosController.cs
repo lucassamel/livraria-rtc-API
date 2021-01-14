@@ -32,7 +32,10 @@ namespace livraria_rtc.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
+            var usuario = await _context.Usuario
+                .Include(u => u.Enderecos)
+                .Include(u => u.Livros)
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (usuario == null)
             {
