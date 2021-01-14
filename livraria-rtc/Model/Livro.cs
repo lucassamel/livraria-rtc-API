@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace livraria_rtc.Model
     {
         [Key]
         public int LivroId { get; set; }
+        [ForeignKey("Usuario")]
+        public int UsuarioId { get; set; }
         [Required]
         public string Nome { get; set; }
         [Required]
