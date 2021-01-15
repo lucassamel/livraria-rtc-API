@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using livraria_rtc.Context;
 using livraria_rtc.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace livraria_rtc.Controllers
 {
@@ -23,6 +24,7 @@ namespace livraria_rtc.Controllers
 
         // GET: api/Usuarios
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuario()
         {
             return await _context.Usuario.ToListAsync();
@@ -30,6 +32,7 @@ namespace livraria_rtc.Controllers
 
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
             var usuario = await _context.Usuario
