@@ -32,7 +32,7 @@ namespace livraria_rtc.Model
         [Required]
         public string Cep { get; set; }
 
-        [JsonIgnore]
+        
         public Usuario Usuario { get; set; }
     }
 }

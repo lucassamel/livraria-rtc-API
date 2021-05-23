@@ -22,8 +22,10 @@ namespace livraria_rtc.Model
         [EmailAddress]
         public string Email { get; set; }        
 
+        [JsonIgnore]
         public ICollection<Livro> Livros { get; set; }
 
+        [JsonIgnore]
         public ICollection<Endereco> Enderecos { get; set; }       
 
     }
