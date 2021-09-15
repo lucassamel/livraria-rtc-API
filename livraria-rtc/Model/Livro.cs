@@ -17,7 +17,7 @@ namespace livraria_rtc.Model
         public int UsuarioId { get; set; }
 
         [Required]
-        public string Nome { get; set; }
+        public string Titulo { get; set; }
 
         [Required]
         public string Autor { get; set; }
