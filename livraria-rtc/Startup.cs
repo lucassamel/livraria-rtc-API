@@ -27,7 +27,14 @@ namespace livraria_rtc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            //services.AddCors();
+
+            services.AddCors(option => {
+                option.AddPolicy("AllowSpecificOrigin", policy => policy.WithOrigins("http://localhost:8080")
+                 .AllowAnyHeader()
+                 .AllowAnyMethod());
+                
+            });
             services.AddDbContext<LivrariaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
             services.AddControllers();
@@ -50,7 +57,14 @@ namespace livraria_rtc
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(option => option.AllowAnyOrigin()); ;
+
+            app.UseCors("AllowSpecificOrigin");
+
+            app.UseCors(option => option.AllowAnyOrigin());
+
+            app.UseCors(option => option.AllowAnyHeader());
+
+            app.UseCors(option => option.AllowAnyMethod());
 
             app.UseHttpsRedirection();
 

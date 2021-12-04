@@ -7,6 +7,7 @@ using livraria_rtc.Context;
 using livraria_rtc.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace livraria_rtc.Controllers
 {
@@ -31,6 +32,24 @@ namespace livraria_rtc.Controllers
             return await _context.Livros.ToListAsync();
         }
 
+        [HttpGet("userLivros")]
+        public async Task<ActionResult<IEnumerable<Livro>>> GetUserLivros()
+        {
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Usuario
+                .FirstAsync(p => p.Email == account.Email);
+
+            var query = new SqlCommand("SELECT Livro FROM Livros WHERE UsuarioId = @UsuarioId");
+            var livros = _context.Livros.Where(p => p.UsuarioId == perfilLogado.UsuarioId).ToListAsync();
+           
+            if (livros == null)
+            {
+                return NotFound();
+            }
+
+            return await livros;
+        }
+
         // GET: api/Livros/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Livro>> GetLivro(int id)
@@ -48,6 +67,8 @@ namespace livraria_rtc.Controllers
         // PUT: api/Livros/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivro(int id, Livro livro)
         {

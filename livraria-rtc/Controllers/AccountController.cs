@@ -5,9 +5,11 @@ using livraria_rtc.Identity;
 using livraria_rtc.Model;
 using livraria_rtc.Requests;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace livraria_rtc.Controllers
 {
@@ -76,21 +78,34 @@ namespace livraria_rtc.Controllers
             return Ok();
         }
 
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email, model.Password, model.RememberMe, false);
+
             if (!result.Succeeded)
             {
                 return StatusCode(StatusCodes.Status400BadRequest, "Login Inválido");
             }
 
-            var usuario = _context.Usuario 
+            var usuario = _context.Usuario
                 .Single(u => u.Email == model.Email);
 
             return Ok(usuario);
+        }
+
+        [Authorize]
+        [HttpGet("user")]
+        public async Task<ActionResult<Usuario>> GetUser()
+        {
+            var account = await _userManager.GetUserAsync(this.User);
+            var perfilLogado = await _context.Usuario
+                .FirstAsync(p => p.Email == account.Email);
+
+            return perfilLogado;
         }
 
     }
