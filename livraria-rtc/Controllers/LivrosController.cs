@@ -32,15 +32,15 @@ namespace livraria_rtc.Controllers
             return await _context.Livros.ToListAsync();
         }
 
-        [HttpGet("userLivros")]
-        public async Task<ActionResult<IEnumerable<Livro>>> GetUserLivros()
+        [HttpGet("userLivros/{id}")]
+        public async Task<ActionResult<IEnumerable<Livro>>> GetUserLivros(int id )
         {
-            var account = await _userManager.GetUserAsync(this.User);
-            var perfilLogado = await _context.Usuario
-                .FirstAsync(p => p.Email == account.Email);
+            //var account = await _userManager.GetUserAsync(this.User);
+            //var perfilLogado = await _context.Usuario
+            //    .FirstAsync(p => p.Email == account.Email);
 
-            var query = new SqlCommand("SELECT Livro FROM Livros WHERE UsuarioId = @UsuarioId");
-            var livros = _context.Livros.Where(p => p.UsuarioId == perfilLogado.UsuarioId).ToListAsync();
+            //var query = new SqlCommand("SELECT Livro FROM Livros WHERE UsuarioId = @UsuarioId");
+            var livros = _context.Livros.Where(p => p.UsuarioId == id).ToListAsync();
            
             if (livros == null)
             {
@@ -102,14 +102,14 @@ namespace livraria_rtc.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<Livro>> PostLivro(Livro livro)
         {
-            var account = await _userManager.GetUserAsync(this.User);
-            var perfilLogado = await _context.Usuario
-                .FirstAsync(p => p.Email == account.Email);
+            //var account = await _userManager.GetUserAsync(this.User);
+            //var perfilLogado = await _context.Usuario
+            //    .FirstAsync(p => p.Email == account.Email);
 
-            livro.UsuarioId = perfilLogado.UsuarioId;
+            //livro.UsuarioId = perfilLogado.UsuarioId;
 
             _context.Livros.Add(livro);
             await _context.SaveChangesAsync();
